@@ -6,11 +6,17 @@
 ## makeVector() and cachemean() by rdpeng. 
 ##
 ##makeCacheMatrix(matrix) 
-##  - returs and caches the inverse of a matrix.
+##  - Creates a list containing the matrix in preperation for 
+## use by cacheSolve() which will solve(x) and sore the result
+## in the same list.
+## 
 ##
 ##cacheSolve(matrix)
-##  - returns the cached inverse of a matrix if availiable, if
-##  not it runs makeCacheMatrix() on the provided matrix.
+##  - Takes makeCacheMatrix(Matrix) as an input and returns the
+## inverse of the matrix given.  Advantage over solve(matrix)
+## is that once run, the result is saved and can be used later
+## by calling cacheSolve(makeCacheMatrix()) on the same Matrix
+##  [as in, it caches the results for later use]
 ##-------------------------------------------------------------
 
 
@@ -20,7 +26,7 @@ makeCacheMatrix <- function(x = matrix()) {
     ## NOTE: This function is intened to be used with cacheSolve, which will
     ## populate the cashed anwers in the list returned by this function.
     
-    ## cache need to be empty until cacheSolve give it a value.
+    ## cache need to be empty until cacheSolve gives it a value.
     cachedMatrix <- NULL
 
     ##Populate elements of the list, current matrix, previous matchs, inverses 
@@ -29,7 +35,7 @@ makeCacheMatrix <- function(x = matrix()) {
         cachedMatrix <<- NULL
     }
     get <- function() x
-    setmatrix <- function(solve) cachedMatrix <<- solve
+    setmatrix <- function(answer) cachedMatrix <<- answer
     getmatrix <- function() cachedMatrix
     
     ##return the list
@@ -53,7 +59,7 @@ cacheSolve <- function(x, ...) {
     }
     else message("this is new, will now be cached")
     
-    ## If there isn'ta a cached answer, solve the matrix and add to cache list.
+    ## If there isn't a cached answer, solve the matrix and add to cache list.
     data <- x$get()
     cachedMatrix <- solve(data, ...)
     x$setmatrix(cachedMatrix)
