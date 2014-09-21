@@ -20,25 +20,23 @@ makeCacheMatrix <- function(x = matrix()) {
     ## NOTE: This function is intened to be used with cacheSolve, which will
     ## populate the cashed anwers in the list returned by this function.
     
+    ## cache need to be empty until cacheSolve give it a value.
     cachedMatrix <- NULL
 
-    ##we need to remember the matrix that was sent so if called again we can compare
+    ##Populate elements of the list, current matrix, previous matchs, inverses 
     set <- function(matrixtosolve) {
         x <<- matrixtosolve
         cachedMatrix <<- NULL
     }
-
-   ##empty function to return x
     get <- function() x
-
     setmatrix <- function(solve) cachedMatrix <<- solve
-    
     getmatrix <- function() cachedMatrix
     
-    ##return the matrix give to sove, the matrix that was set, and the inverses
+    ##return the list
     list(set = set, get = get,
          setmatrix = setmatrix,
          getmatrix = getmatrix)
+    
 } ##end  makeCacheMatrix
 
 
@@ -47,7 +45,7 @@ cacheSolve <- function(x, ...) {
     ## that x has be run though MakeCacheMatrix() first, so that a list has 
     ## been made with the value x and its inverse as returned from this function 
 
-    ## check for a cached value given the input
+    ## check for a cached value given the input, and return if found
     cachedMatrix <- x$getmatrix()
     if(!is.null(cachedMatrix)) {
         message("getting cached data")
@@ -55,10 +53,12 @@ cacheSolve <- function(x, ...) {
     }
     else message("this is new, will now be cached")
     
-    ## time to do the actual work and solve the matrix
+    ## If there isn'ta a cached answer, solve the matrix and add to cache list.
     data <- x$get()
     cachedMatrix <- solve(data, ...)
     x$setmatrix(cachedMatrix)
+    
+    ## return answer (matrix inverse)
     cachedMatrix
 
 } ## end cacheSolve
